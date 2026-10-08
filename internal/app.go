@@ -194,6 +194,7 @@ func setupApi(app *orz.App, handlers *Handlers, appConfig *config.AppConfig, log
 	// Property API
 	api.GET("/properties/:id", handlers.Property.GetProperty)
 	api.PUT("/properties/:id", handlers.Property.SetProperty)
+	api.POST("/sms-filter/test", handlers.Property.TestSMSFilter)
 	api.POST("/notifications/:type/test", handlers.Property.TestNotificationChannel)
 
 	// TextMessage API

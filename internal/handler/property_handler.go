@@ -70,6 +70,25 @@ func (h *PropertyHandler) SetProperty(c *echo.Context) error {
 		})
 	}
 
+	if id == service.PropertyIDSMSFilterConfig {
+		value, err := json.Marshal(req.Value)
+		if err != nil || req.Value == nil {
+			return c.JSON(http.StatusBadRequest, map[string]string{"error": "无效的短信过滤配置"})
+		}
+		var config models.SMSFilterConfig
+		if err := json.Unmarshal(value, &config); err != nil {
+			return c.JSON(http.StatusBadRequest, map[string]string{"error": "无效的短信过滤配置"})
+		}
+		if err := service.ValidateSMSFilterConfig(config); err != nil {
+			return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+		}
+		if err := h.service.SetSMSFilterConfig(c.Request().Context(), config); err != nil {
+			h.logger.Error("保存短信过滤配置失败", zap.Error(err))
+			return c.JSON(http.StatusInternalServerError, map[string]string{"error": "保存短信过滤配置失败"})
+		}
+		return c.JSON(http.StatusOK, map[string]string{"message": "设置成功"})
+	}
+
 	if id == service.PropertyIDAutoFlymodeConfig {
 		value, err := json.Marshal(req.Value)
 		if err != nil {
@@ -97,6 +116,22 @@ func (h *PropertyHandler) SetProperty(c *echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]string{
 		"message": "设置成功",
 	})
+}
+
+// TestSMSFilter 测试当前草稿规则，不保存配置，也不发送任何通知。
+func (h *PropertyHandler) TestSMSFilter(c *echo.Context) error {
+	var req struct {
+		Config  *models.SMSFilterConfig `json:"config"`
+		Content string                  `json:"content"`
+	}
+	if err := c.Bind(&req); err != nil || req.Config == nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "无效的短信过滤测试参数"})
+	}
+	result, err := service.EvaluateSMSFilter(*req.Config, req.Content)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+	}
+	return c.JSON(http.StatusOK, result)
 }
 
 // TestNotificationChannel 测试通知渠道（从数据库读取配置）

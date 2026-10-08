@@ -71,6 +71,42 @@ export const saveAutoFlymodeConfig = async (config: AutoFlymodeConfig): Promise<
     return saveProperty(PROPERTY_ID_AUTO_FLYMODE_CONFIG, '自动飞行模式配置', config);
 };
 
+// ==================== 短信过滤配置 ====================
+
+const PROPERTY_ID_SMS_FILTER_CONFIG = 'sms_filter_config';
+
+export interface SMSFilterConfig {
+    enabled: boolean;
+    mode: 'include' | 'exclude';
+    pattern: string;
+}
+
+export interface SMSFilterTestRequest {
+    config: SMSFilterConfig;
+    content: string;
+}
+
+export interface SMSFilterResult {
+    matched: boolean;
+    forward: boolean;
+}
+
+export const getSMSFilterConfig = async (): Promise<SMSFilterConfig> => {
+    return await getProperty<SMSFilterConfig>(PROPERTY_ID_SMS_FILTER_CONFIG) || {
+        enabled: false,
+        mode: 'include',
+        pattern: '',
+    };
+};
+
+export const saveSMSFilterConfig = (config: SMSFilterConfig): Promise<void> => {
+    return saveProperty(PROPERTY_ID_SMS_FILTER_CONFIG, '短信过滤配置', config);
+};
+
+export const testSMSFilter = (request: SMSFilterTestRequest): Promise<SMSFilterResult> => {
+    return apiClient.post<SMSFilterResult>('/sms-filter/test', request);
+};
+
 export interface Version {
     version: string;
 }

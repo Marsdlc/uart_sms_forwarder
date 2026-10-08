@@ -4,6 +4,7 @@ import {
     Bell,
     ChevronRight,
     Clock3,
+    Filter,
     LayoutDashboard,
     LogOut,
     Menu,
@@ -25,6 +26,7 @@ const navigation = [
     {name: '短信中心', description: '短信收发与历史', href: '/messages', icon: MessageSquareText},
     {name: '串口控制', description: '设备与短信下发', href: '/serial', icon: Smartphone},
     {name: '通知渠道', description: '管理消息推送', href: '/notifications', icon: Bell},
+    {name: '短信过滤', description: '转发前正则匹配', href: '/sms-filter', icon: Filter},
     {name: '计划任务', description: '自动执行任务', href: '/scheduled-tasks', icon: Clock3},
     {name: '自动飞行', description: '飞行模式策略', href: '/auto-flymode', icon: Plane},
 ];

@@ -10,6 +10,7 @@ import SerialControl from './pages/SerialControl';
 import NotificationChannels from './pages/NotificationChannels';
 import ScheduledTasksConfig from './pages/ScheduledTasksConfig';
 import AutoFlymodeSettings from './pages/AutoFlymodeSettings';
+import SMSFilterSettings from './pages/SMSFilterSettings';
 import {Toaster} from "@/components/ui/sonner.tsx";
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
                         <Route path="messages" element={<Messages/>}/>
                         <Route path="serial" element={<SerialControl/>}/>
                         <Route path="notifications" element={<NotificationChannels/>}/>
+                        <Route path="sms-filter" element={<SMSFilterSettings/>}/>
                         <Route path="scheduled-tasks" element={<ScheduledTasksConfig/>}/>
                         <Route path="auto-flymode" element={<AutoFlymodeSettings/>}/>
                     </Route>

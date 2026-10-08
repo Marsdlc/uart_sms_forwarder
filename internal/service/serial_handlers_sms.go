@@ -69,6 +69,23 @@ func (s *SerialService) handleIncomingSMS(msg *ParsedMessage) {
 
 // sendNotification 发送通知
 func (s *SerialService) sendNotification(ctx context.Context, sms IncomingSMS) {
+	config, err := s.propertyService.GetSMSFilterConfig(ctx)
+	if err != nil {
+		s.logger.Error("获取短信过滤配置失败，跳过本次转发", zap.Error(err))
+		return
+	}
+	result, err := EvaluateSMSFilter(config, sms.Content)
+	if err != nil {
+		s.logger.Error("短信过滤规则无效，跳过本次转发", zap.Error(err))
+		return
+	}
+	if !result.Forward {
+		s.logger.Info("短信被过滤，跳过转发",
+			zap.String("from", sms.From),
+			zap.String("mode", config.Mode))
+		return
+	}
+
 	// 转换为通用通知消息
 	msg := NotificationMessage{
 		Type:      "sms",

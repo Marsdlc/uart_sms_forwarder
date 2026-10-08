@@ -168,6 +168,11 @@ func (s *PropertyService) InitializeDefaultConfigs(ctx context.Context) error {
 			Name:  "自动飞行模式配置",
 			Value: DefaultAutoFlymodeConfig(),
 		},
+		{
+			ID:    PropertyIDSMSFilterConfig,
+			Name:  "短信过滤配置",
+			Value: DefaultSMSFilterConfig(),
+		},
 	}
 
 	// 遍历并初始化每个配置

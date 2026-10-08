@@ -26,6 +26,13 @@ type AutoFlymodeConfig struct {
 	IdleTimeoutHours int64 `json:"idleTimeoutHours"`
 }
 
+// SMSFilterConfig 收到的短信转发过滤配置，匹配原始短信正文。
+type SMSFilterConfig struct {
+	Enabled bool   `json:"enabled"`
+	Mode    string `json:"mode"` // include: 匹配后转发；exclude: 匹配后拦截
+	Pattern string `json:"pattern"`
+}
+
 // 配置格式说明：
 // dingtalk: { "secretKey": "xxx", "signSecret": "xxx" }
 // wecom:    { "secretKey": "xxx" }
